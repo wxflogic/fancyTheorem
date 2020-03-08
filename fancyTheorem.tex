@@ -13,9 +13,11 @@
 \usepackage{thmtools} % https://ctan.org/pkg/thmtools
 \usepackage[framemethod=TikZ]{mdframed} % https://ctan.org/pkg/mdframed
 
-%-----------------------
+%\usepackage{lipsum}
+
+%--------------------
 % not so fancy style
-%-----------------------
+%--------------------
 % Define boundaries surrounding theorems
 \makeatletter%
 \newcommand{\theoremhang}{% top theorem decoration
@@ -88,9 +90,9 @@
 \newenvironment{defn}{\par\noindent\definitionhang\par\nobreak\vspace*{-2.5ex}\begin{definition}}{\end{definition}\par\addvspace{-3ex}\nobreak\noindent\definitionhung\par}
 
 
-%-----------------------
+%-------------
 % fancy style
-%-----------------------
+%-------------
 \usepackage{thmtools}
 % Define definition
 \declaretheorem[style=definition,shaded={bgcolor=blue!10},qed=$\heartsuit$,numberwithin=chapter,name=Definition]{fdefn}
@@ -101,16 +103,68 @@
 % Define remark
 \declaretheorem[style=remark,name=Remark,sibling=fdefn]{frem}
 
-%-----------------------
+%----------------------
+% yet more fancy style
+%----------------------
+% Define the style of definition
+\newmdenv[skipabove=7pt,
+skipbelow=7pt,
+rightline=false,
+leftline=true,
+topline=false,
+bottomline=false,
+backgroundcolor=blue!10,
+linecolor=blue!50,
+innerleftmargin=5pt,
+innerrightmargin=5pt,
+innertopmargin=1pt,
+innerbottommargin=8pt,
+leftmargin=0cm,
+rightmargin=0cm,
+linewidth=4pt]{defBox}
+
+% Define the style of theorem
+\newmdenv[skipabove=7pt,
+skipbelow=7pt,
+rightline=false,
+leftline=true,
+topline=false,
+bottomline=false,
+backgroundcolor=red!10,
+linecolor=red!50,
+innerleftmargin=5pt,
+innerrightmargin=5pt,
+innertopmargin=1pt,
+innerbottommargin=8pt,
+leftmargin=0cm,
+rightmargin=0cm,
+linewidth=4pt]{thmBox}
+
+% Define theorem
+\theoremstyle{plain}
+\newtheorem{athm}{Theorem}[chapter]
+\newenvironment{ythm}{\begin{thmBox}\begin{athm}}{\end{athm}\end{thmBox}}
+
+% Define definition
+\theoremstyle{definition}
+\newtheorem{adefn}[athm]{Definition}
+\newenvironment{ydefn}{\begin{defBox}\begin{adefn}}{\end{adefn}\end{defBox}}
+
+% Define remark
+\theoremstyle{remark}
+\newtheorem{arem}[athm]{Remark}
+
+
+%------------------
 % very fancy style
-%-----------------------
+%------------------
 % Define counter
 \newcounter{theo}[chapter]
 \setcounter{theo}{0}
 \renewcommand{\thetheo}{\arabic{chapter}.\arabic{theo}}
 
 % Define theorem 
-\newenvironment{vfthm}[1][]{%
+\newenvironment{vthm}[1][]{%
   \refstepcounter{theo}
 \ifstrempty{#1}%
 {\mdfsetup{%
@@ -133,7 +187,7 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax
 }{\end{mdframed}}
 
 % Define definition
-\newenvironment{vfdefn}[1][]{%
+\newenvironment{vdefn}[1][]{%
   \refstepcounter{theo}
 \ifstrempty{#1}%
 {\mdfsetup{%
@@ -156,7 +210,7 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax
 }{\end{mdframed}}
 
 % Define remark
-\newenvironment{vfrem}[1][]{%
+\newenvironment{vrem}[1][]{%
   \refstepcounter{theo}
   \par\medskip\noindent%
 \ifstrempty{#1}{%
@@ -166,14 +220,14 @@ frametitleaboveskip=\dimexpr-\ht\strutbox\relax
 {\end{upshape}\par\medskip}
 
 
-%========================
+%===========================
 % Body Text
-%========================
+%===========================
 \begin{document}
 
-%---------------------------
-\chapter{Not so fancy style}
-%---------------------------
+%----------------------------
+\chapter{Not so Fancy Style}
+%----------------------------
 \begin{defn}
 A definition without name.
 \end{defn}
@@ -194,19 +248,19 @@ A theorem with name.
 A remark without name.
 \end{remark}
 
-\begin{remark}[My remark name]
+\begin{remark}[My remark]
 A remark with name.  
 \end{remark}
 
 
-%------------------
-\chapter{Fancy style}
-%------------------
+%---------------------
+\chapter{Fancy Style}
+%---------------------
 \begin{fdefn}
 A fancy definition with background, endmark and numbered within chapters (without name).  
 \end{fdefn}
 
-\begin{fthm}[Fancy name]
+\begin{fthm}
 A fancy theorem with background, endmark and numbered within chapters (without name).
 \end{fthm}
 
@@ -222,43 +276,64 @@ A fancy theorem with background, endmark and numbered within chapters.
 A remark without name.  
 \end{frem}
 
-\begin{frem}[My remark name]
+\begin{frem}[My remark]
 A remark with name.
 \end{frem}
 
 
-%------------------
-\chapter{Very fancy style}
-%------------------
-\begin{vfdefn}
+%------------------------------
+\chapter{Yet More Fancy Style}
+%------------------------------
+\begin{ydefn}
+Another fancy definition without name.  
+\end{ydefn}
+
+\begin{ythm}
+Another fancy theorem without name.
+\end{ythm}
+
+\begin{ydefn}[My another fancy definition]
+Another fancy definition without name.  
+\end{ydefn}
+
+\begin{ythm}[My another fancy theorem]
+Another fancy theorem without name.
+\end{ythm}
+
+\begin{arem}
+Yet another remark without name.  
+\end{arem}
+
+\begin{arem}[My remark]
+Yet another remark with name.  
+\end{arem}
+
+
+%--------------------------
+\chapter{Very Fancy Style}
+%--------------------------
+\begin{vdefn}
 A very fancy definition without name.
-\end{vfdefn}
+\end{vdefn}
 
-\begin{vfthm}
+\begin{vthm}
 A very fancy theorem without name.
-\end{vfthm}
+\end{vthm}
 
-\begin{vfdefn}[My very fancy definition]
+\begin{vdefn}[My very fancy definition]
 A very fancy definition with name.
-\end{vfdefn}
+\end{vdefn}
 
-\begin{vfthm}[My Very fancy theorm]
+\begin{vthm}[My Very fancy theorm]
 A very fancy theorem with name.
-\end{vfthm}
+\end{vthm}
 
-\begin{vfrem}
+\begin{vrem}
 A remark without name.  
-\end{vfrem}
+\end{vrem}
 
-\begin{vfrem}[My remark]
+\begin{vrem}[My remark]
 A remark with name.  
-\end{vfrem}
-
-
-
-
-
-
+\end{vrem}
 
 \end{document}
-

@@ -1,0 +1,264 @@
+\documentclass{book}
+
+\usepackage{amssymb}
+\usepackage{amsthm}
+
+\usepackage{xcolor} % http://ctan.org/pkg/xcolor
+\usepackage{ifmtarg} % http://ctan.org/pkg/ifmtarg
+\usepackage{xifthen} % http://ctan.org/pkg/xifthen
+\usepackage{environ} % http://ctan.org/pkg/environ
+\usepackage{multido} % http://ctan.org/pkg/multido
+\usepackage{lipsum} % http://ctan.org/pkg/lipsum
+
+\usepackage{thmtools} % https://ctan.org/pkg/thmtools
+\usepackage[framemethod=TikZ]{mdframed} % https://ctan.org/pkg/mdframed
+
+%-----------------------
+% not so fancy style
+%-----------------------
+% Define boundaries surrounding theorems
+\makeatletter%
+\newcommand{\theoremhang}{% top theorem decoration
+  \begingroup%
+  \setlength{\unitlength}{.005\linewidth}% \linewidth/200
+    \begin{picture}(0,0)(1.5,0)%
+      \linethickness{0.45pt} \color{red!50}%
+      \put(-3,2){\line(1,0){206}}% Top line
+      \multido{\iA=2+-1,\iB=50+-10}{5}{% Top hangs
+        \color{red!\iB}%
+        \put(-3,\iA){\line(0,-1){1}}% Top left hang
+        \put(203,\iA){\line(0,-1){1}}% Top right hang
+      }%
+    \end{picture}%
+  \endgroup%
+}%
+\newcommand{\theoremhung}{% bottom theorem decoration
+  \nobreak
+  \begingroup%
+    \setlength{\unitlength}{.005\linewidth}% \linewidth/200
+    \begin{picture}(0,0)(1.5,0)%
+      \linethickness{0.45pt} \color{red!50}%
+      \put(-3,0){\line(1,0){206}}% Bottom line
+      \multido{\iA=0+1,\iB=50+-10}{5}{% Bottom hangs
+        \color{red!\iB}%
+        \put(-3,\iA){\line(0,1){1}}% Bottom left hang
+        \put(203,\iA){\line(0,1){1}}% Bottom right hang
+      }%
+    \end{picture}%
+  \endgroup%
+}%
+
+% Define boundaries surrounding definitions
+\newcommand{\definitionhang}{% top theorem decoration
+  \begingroup%
+  \setlength{\unitlength}{.005\linewidth}% \linewidth/200
+    \begin{picture}(0,0)(1.5,0)%
+      \linethickness{0.45pt} \color{blue!50}%
+      \put(-3,2){\line(1,0){206}}% Top line
+      \multido{\iA=2+-1,\iB=50+-10}{5}{% Top hangs
+        \color{blue!\iB}%
+        \put(-3,\iA){\line(0,-1){1}}% Top left hang
+        \put(203,\iA){\line(0,-1){1}}% Top right hang
+      }%
+    \end{picture}%
+  \endgroup%
+}%
+\newcommand{\definitionhung}{% bottom theorem decoration
+  \nobreak
+  \begingroup%
+    \setlength{\unitlength}{.005\linewidth}% \linewidth/200
+    \begin{picture}(0,0)(1.5,0)%
+      \linethickness{0.45pt} \color{blue!50}%
+      \put(-3,0){\line(1,0){206}}% Bottom line
+      \multido{\iA=0+1,\iB=50+-10}{5}{% Bottom hangs
+        \color{blue!\iB}%
+        \put(-3,\iA){\line(0,1){1}}% Bottom left hang
+        \put(203,\iA){\line(0,1){1}}% Bottom right hang
+      }%
+    \end{picture}%
+  \endgroup%
+}%
+
+% Define theorem environments using thmtools
+\declaretheorem[style=plain,numberwithin=chapter]{theorem}
+\declaretheorem[style=definition,sibling=theorem]{definition}
+\declaretheorem[style=remark,sibling=theorem]{remark}
+
+\newenvironment{thm}{\par\noindent\theoremhang\par\nobreak\vspace*{-2.5ex}\begin{theorem}}{\end{theorem}\par\addvspace{-3ex}\nobreak\noindent\theoremhung\par}
+\newenvironment{defn}{\par\noindent\definitionhang\par\nobreak\vspace*{-2.5ex}\begin{definition}}{\end{definition}\par\addvspace{-3ex}\nobreak\noindent\definitionhung\par}
+
+
+%-----------------------
+% fancy style
+%-----------------------
+\usepackage{thmtools}
+% Define definition
+\declaretheorem[style=definition,shaded={bgcolor=blue!10},qed=$\heartsuit$,numberwithin=chapter,name=Definition]{fdefn}
+
+% Define theorem
+\declaretheorem[style=plain,shaded={bgcolor=red!10},qed=$\spadesuit$,sibling=fdefn,name=Theorem]{fthm}
+
+% Define remark
+\declaretheorem[style=remark,name=Remark,sibling=fdefn]{frem}
+
+%-----------------------
+% very fancy style
+%-----------------------
+% Define counter
+\newcounter{theo}[chapter]
+\setcounter{theo}{0}
+\renewcommand{\thetheo}{\arabic{chapter}.\arabic{theo}}
+
+% Define theorem 
+\newenvironment{vfthm}[1][]{%
+  \refstepcounter{theo}
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=red!20]
+{\strut Theorem~\thetheo};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=red!20]
+{\strut Theorem~\thetheo:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=red!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}
+\begin{mdframed}[]\relax%
+}{\end{mdframed}}
+
+% Define definition
+\newenvironment{vfdefn}[1][]{%
+  \refstepcounter{theo}
+\ifstrempty{#1}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut Definition~\thetheo};}}
+}%
+{\mdfsetup{%
+frametitle={%
+\tikz[baseline=(current bounding box.east),outer sep=0pt]
+\node[anchor=east,rectangle,fill=blue!20]
+{\strut Definition~\thetheo:~#1};}}%
+}%
+\mdfsetup{innertopmargin=10pt,linecolor=blue!20,%
+linewidth=2pt,topline=true,%
+frametitleaboveskip=\dimexpr-\ht\strutbox\relax
+}%
+\begin{mdframed}[]\relax%
+}{\end{mdframed}}
+
+% Define remark
+\newenvironment{vfrem}[1][]{%
+  \refstepcounter{theo}
+  \par\medskip\noindent%
+\ifstrempty{#1}{%
+\textit{Remark}~\thetheo.~\begin{upshape}}%
+{\textit{Remark}~\thetheo~(#1).\begin{upshape}}%
+}%
+{\end{upshape}\par\medskip}
+
+
+%========================
+% Body Text
+%========================
+\begin{document}
+
+%---------------------------
+\chapter{Not so fancy style}
+%---------------------------
+\begin{defn}
+A definition without name.
+\end{defn}
+
+\begin{thm}
+A theorem without name.
+\end{thm}
+
+\begin{defn}[My definition]
+A definition with name.
+\end{defn}
+
+\begin{thm}[My theorem]
+A theorem with name.
+\end{thm}
+
+\begin{remark}
+A remark without name.
+\end{remark}
+
+\begin{remark}[My remark name]
+A remark with name.  
+\end{remark}
+
+
+%------------------
+\chapter{Fancy style}
+%------------------
+\begin{fdefn}
+A fancy definition with background, endmark and numbered within chapters (without name).  
+\end{fdefn}
+
+\begin{fthm}[Fancy name]
+A fancy theorem with background, endmark and numbered within chapters (without name).
+\end{fthm}
+
+\begin{fdefn}[My fancy definition]
+A fancy definition with background, endmark and numbered within chapters.
+\end{fdefn}
+
+\begin{fthm}[My fancy theorem]
+A fancy theorem with background, endmark and numbered within chapters.
+\end{fthm}
+
+\begin{frem}
+A remark without name.  
+\end{frem}
+
+\begin{frem}[My remark name]
+A remark with name.
+\end{frem}
+
+
+%------------------
+\chapter{Very fancy style}
+%------------------
+\begin{vfdefn}
+A very fancy definition without name.
+\end{vfdefn}
+
+\begin{vfthm}
+A very fancy theorem without name.
+\end{vfthm}
+
+\begin{vfdefn}[My very fancy definition]
+A very fancy definition with name.
+\end{vfdefn}
+
+\begin{vfthm}[My Very fancy theorm]
+A very fancy theorem with name.
+\end{vfthm}
+
+\begin{vfrem}
+A remark without name.  
+\end{vfrem}
+
+\begin{vfrem}[My remark]
+A remark with name.  
+\end{vfrem}
+
+
+
+
+
+
+
+\end{document}
+
